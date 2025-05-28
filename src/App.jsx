@@ -6,6 +6,8 @@ import { Content, Header } from 'antd/es/layout/layout';
 import { Link, Outlet } from 'react-router-dom';
 import { LuLayoutDashboard } from "react-icons/lu";
 import { FaProductHunt } from "react-icons/fa6";
+import { FaUserAlt } from "react-icons/fa";
+import { BsCartFill } from "react-icons/bs";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -32,6 +34,14 @@ function App() {
 
     <Menu.Item key={'2'} icon={<FaProductHunt />}>
     <Link to={'/product'}>Product</Link>
+    </Menu.Item>
+
+    <Menu.Item key={'3'} icon={<FaUserAlt />}>
+    <Link to={'/user'}>User</Link>
+    </Menu.Item>
+
+    <Menu.Item key={'4'} icon={<BsCartFill />}>
+    <Link to={'/Cart'}>Cart</Link>
     </Menu.Item>
 
   </Menu>

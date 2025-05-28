@@ -8,6 +8,8 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 
 import DashboardPage from './pages/DashboardPage.jsx';
 import ProductPage from './pages/ProductPage.jsx';
+import UserPage from './pages/UserPage.jsx';
+import CartPage from './pages/CartPage.jsx';
 
 
 const router = createBrowserRouter([
@@ -22,6 +24,14 @@ const router = createBrowserRouter([
       {
         path:'product',
         element:<ProductPage/>
+      },
+      {
+        path:'user',
+        element:<UserPage/>
+      },
+      {
+        path:'cart',
+        element:<CartPage/>
       },
     ],
   },
