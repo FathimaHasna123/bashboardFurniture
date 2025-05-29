@@ -8,6 +8,7 @@ import { LuLayoutDashboard } from "react-icons/lu";
 import { FaProductHunt } from "react-icons/fa6";
 import { FaUserAlt } from "react-icons/fa";
 import { BsCartFill } from "react-icons/bs";
+import { SiBloglovin } from "react-icons/si";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -42,6 +43,10 @@ function App() {
 
     <Menu.Item key={'4'} icon={<BsCartFill />}>
     <Link to={'/Cart'}>Cart</Link>
+    </Menu.Item>
+
+    <Menu.Item key={'5'} icon={<SiBloglovin />}>
+    <Link to={'/blog'}>Blog</Link>
     </Menu.Item>
 
   </Menu>

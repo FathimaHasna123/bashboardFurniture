@@ -29,12 +29,12 @@ function Cart  () {
     {
         title:"Product Name",
         key:'productName',
-        dataIndex:['product','productName']
+        dataIndex:['productName','productName']
     },
     {
         title:"UserId",
         key:'userId',
-        dataIndex:['user','name']
+        dataIndex:['userId','name']
     },
     {
         title:"Quantity",
@@ -68,28 +68,28 @@ function Cart  () {
         })
     }
 
-      const onOpenUpdateModal = (record) => {
-        updateForm.setFieldsValue({ name: record.name })
+       const onOpenUpdateModal = (record) => {
+        updateForm.setFieldsValue({
+            productName: record.product?.id,
+            userId: record.user?.id,
+           
+        })
         setUpdateId(record.id)
         setUpdateModal(true)
     }
 
-    const updateFinish = (values) => {
-        const val = { id: updateId, data: values }
-        console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-        
-        Update(val, {
-            onSuccess() {
+
+        const updateFinish = (values) => {
+        Update({ id: updateId, data: values }, {
+            onSuccess: () => {
                 message.success('Updated successfully')
                 setUpdateModal(false)
                 refetch()
             },
-            onError() {
+            onError: () => {
                 message.error('Failed to update')
             }
         })
-
-        console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbb");
     }
 
  
@@ -110,7 +110,7 @@ function Cart  () {
 <div className="flex items-center justify-end mb-4">
     <Button className="px-[13px] py-[7px] rounded-md text-white bg-blue-900" onClick={() => setAddModal(true)}>Add</Button>
 </div>
-<Table loading={isLoading} columns={columns} dataSource={data?.data}/>
+ <Table loading={isLoading} columns={columns} dataSource={data?.data} />
 <Modal
 open={AddModal}
 onCancel={()=>setAddModal(false)}
@@ -121,17 +121,17 @@ title="Create Cart">
 
         <Form.Item name="productName" label="ProductName" rules={[{ required: true, message: 'Please enter Product Name' }]}>
            <Select className="w-full sm:w-[20%]">
-            {ProductData?.data?.map((item, index) => (
-                <Select.Option value={item.id} key={index}>{item.ProductName}</Select.Option>
-            ))}
+             {ProductData?.data?.map(item => (
+            <Select.Option value={item.id} key={item.id}>{item.productName}</Select.Option>
+                 ))}
            </Select>
         </Form.Item>
 
          <Form.Item name="userId" label="UserId" rules={[{ required: true, message: 'Please enter User Name' }]}>
            <Select className="w-full sm:w-[20%]">
-            {UserData?.data?.map((item, index) => (
-                <Select.Option value={item.id} key={index}>{item.User}</Select.Option>
-            ))}
+             {UserData?.data?.map(item => (
+            <Select.Option value={item.id} key={item.id}>{item.name}</Select.Option>
+              ))}
            </Select>
         </Form.Item>
 
@@ -155,17 +155,17 @@ title="Update Cart">
 
         <Form.Item name="productName" label="ProductName" rules={[{ required: true, message: 'Please enter Product Name' }]}>
            <Select className="w-full sm:w-[20%]">
-            {ProductData?.data?.map((item, index) => (
-                <Select.Option value={item.id} key={index}>{item.ProductName}</Select.Option>
-            ))}
+             {ProductData?.data?.map(item => (
+             <Select.Option value={item.id} key={item.id}>{item.productName}</Select.Option>
+               ))}
            </Select>
         </Form.Item>
 
          <Form.Item name="userId" label="UserId" rules={[{ required: true, message: 'Please enter User Name' }]}>
            <Select className="w-full sm:w-[20%]">
-            {UserData?.data?.map((item, index) => (
-                <Select.Option value={item.id} key={index}>{item.User}</Select.Option>
-            ))}
+            {UserData?.data?.map(item => (
+            <Select.Option value={item.id} key={item.id}>{item.name}</Select.Option>
+                 ))}
            </Select>
         </Form.Item>
 

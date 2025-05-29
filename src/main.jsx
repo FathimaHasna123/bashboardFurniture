@@ -10,6 +10,7 @@ import DashboardPage from './pages/DashboardPage.jsx';
 import ProductPage from './pages/ProductPage.jsx';
 import UserPage from './pages/UserPage.jsx';
 import CartPage from './pages/CartPage.jsx';
+import BlogPage from './pages/BlogPage.jsx';
 
 
 const router = createBrowserRouter([
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
       {
         path:'cart',
         element:<CartPage/>
+      },
+      {
+        path:'blog',
+        element:<BlogPage/>
       },
     ],
   },

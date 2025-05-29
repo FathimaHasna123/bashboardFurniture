@@ -122,14 +122,14 @@ function Product() {
         rowKey="id"
       />
 
-      {/* Create Modal */}
+    
       <Modal
         open={addModal}
         onCancel={() => setAddModal(false)}
         footer={null}
-        title="Create Product"
-      >
+        title="Create Product">
         <Form layout='vertical' onFinish={onFinish} form={form}>
+
           <Form.Item name="productName" label="Product Name" rules={[{ required: true, message: 'Please enter product name' }]}>
             <Input placeholder='Enter product name' />
           </Form.Item>
@@ -148,14 +148,15 @@ function Product() {
         </Form>
       </Modal>
 
-      {/* Update Modal */}
+    
       <Modal
         open={updateModal}
         onCancel={() => setUpdateModal(false)}
         footer={null}
-        title="Update Product"
-      >
+        title="Update Product">
+
         <Form layout='vertical' onFinish={updateFinish} form={updateForm}>
+          
           <Form.Item name="productName" label="Product Name" rules={[{ required: true, message: 'Please enter product name' }]}>
             <Input placeholder='Enter product name' />
           </Form.Item>
