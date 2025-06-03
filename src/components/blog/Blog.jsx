@@ -58,8 +58,8 @@ function Blog  ()  {
 
      const onFinish = (values) => {
         const FormData = new FormData()
-        formData.append('image',values.image.file.orignfileobj)
-         Create(formData, {
+        FormData.append('image',values.image.file.orignfileobj)
+         Create(FormData, {
              onSuccess:()=>{
                  message.success('Created successfully')
                  setAddModal(false)
