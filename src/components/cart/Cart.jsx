@@ -1,56 +1,51 @@
-import {  Table } from 'antd'
-import React, { useState } from 'react'
-import { useQuery } from 'react-query'
-import { getCart } from '../../utils/cart/cartApi'
-import { getProduct } from '../../utils/product/productApi'
-import { getUser } from '../../utils/user/userApi'
+import React from 'react'
+import { Table } from 'antd';
+import { useQuery } from 'react-query';
+import { getCart } from '../../utils/cart/cartApi';
+import { getProduct } from '../../utils/product/productApi';
+import { getUser } from '../../utils/user/userApi';
 
+function Cart() {
+  const { data, isLoading } = useQuery('getCart', getCart)
+  const { data: ProductData } = useQuery('getProduct', getProduct)
+  const { data: UserData } = useQuery('getUser', getUser)
 
-function Cart  () {
-   const { data,isLoading,refetch } = useQuery('getCart',getCart)
-   const { data:ProductData} = useQuery('getProduct',getProduct)
-   const { data:UserData } = useQuery('getUser',getUser)
-   
-
-   
-   
-
-  
-   
-   
-
-   const columns = [
+  const columns = [
     {
-        title:"Id",
-        key:'id',
-        dataIndex:'id'
+      title: 'Cart ID',
+      dataIndex: 'id',
+      key: 'id',
     },
     {
-        title:"Product Name",
-        key:'productName',
-        dataIndex:['productName','productName']
+      title: 'Product Name',
+      key: 'productName',
+      render: (text, record) =>
+        typeof record.productName === 'object'
+          ? record.productName.productName
+          : record.productName,
     },
     {
-        title:"UserId",
-        key:'userId',
-        dataIndex:['userId','name']
+      title: 'User Name',
+      key: 'userId',
+      render: (text, record) =>
+        typeof record.userId === 'object' ? record.userId.name : record.userId,
     },
     {
-        title:"Quantity",
-        key:'quantity',
-        dataIndex:'quantity '
+      title: 'Quantity',
+      dataIndex: 'quantity',
+      key: 'quantity',
     },
-   
-   ]
+  ];
 
- 
   return (
-    <div>
-
- <Table loading={isLoading} columns={columns} dataSource={data?.data} />
-
-
-
+    <div className="p-4">
+    
+      <Table
+        loading={isLoading}
+        columns={columns}
+        dataSource={data?.data || []}
+        rowKey="id"
+      />
     </div>
   )
 }
