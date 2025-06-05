@@ -1,113 +1,139 @@
-import { Button, Form, Input, Modal, Table, message } from 'antd'
-import { getProduct } from '../../utils/product/productApi'
-import { useQuery } from 'react-query'
-import { useState } from 'react'
-import { useCreateProduct, useDeleteProduct, useUpdateProduct } from '../../utils/product/productHook'
+import { Button, Form, Input, Modal, Table, Upload, message } from 'antd';
+import { getProduct } from '../../utils/product/productApi';
+import { useQuery } from 'react-query';
+import { useState } from 'react';
+import { UploadOutlined } from '@ant-design/icons';
+import { useCreateProduct, useDeleteProduct, useUpdateProduct } from '../../utils/product/productHook';
 
 function Product() {
-  const { data, isLoading, refetch } = useQuery('getProduct', getProduct)
-  const [addModal, setAddModal] = useState(false)
-  const [updateModal, setUpdateModal] = useState(false)
-  const [updateId, setUpdateId] = useState()
-  const [form] = Form.useForm()
-  const [updateForm] = Form.useForm()
-  const { mutate: Create } = useCreateProduct()
-  const { mutate: Update } = useUpdateProduct()
-  const { mutate: Delete } = useDeleteProduct()
+  const { data, isLoading, refetch } = useQuery('getProduct', getProduct);
+  const [addModal, setAddModal] = useState(false);
+  const [updateModal, setUpdateModal] = useState(false);
+  const [updateId, setUpdateId] = useState();
+  const [form] = Form.useForm();
+  const [updateForm] = Form.useForm();
+  const { mutate: Create } = useCreateProduct();
+  const { mutate: Update } = useUpdateProduct();
+  const { mutate: Delete } = useDeleteProduct();
 
   const columns = [
     {
       title: "Id",
-      key: 'id',
       dataIndex: 'id'
     },
     {
       title: "Product Name",
-      key: 'productName',
       dataIndex: 'productName'
     },
     {
       title: "Price",
-      key: 'price',
       dataIndex: 'price'
     },
     {
       title: "Rates",
-      key: 'rates',
       dataIndex: 'rates'
     },
     {
+      title: "Image",
+      dataIndex: 'image',
+      key: 'image',
+      render: (text) => {
+        const imageUrl = text?.startsWith('http') ? text : `http://127.0.0.1:8000/${text}`;
+        return text ? (
+          <img
+            src={imageUrl}
+            alt="Product"
+            style={{ width: 60, height: 60, objectFit: 'cover', borderRadius: 4 }}
+            onError={(e) => e.currentTarget.src = 'https://via.placeholder.com/60'}
+          />
+        ) : (
+          <span>No image</span>
+        );
+      }
+    },
+    {
       title: "Action",
-      key: 'action',
       render: (_, record) => (
         <div className="flex items-center space-x-4">
-          <button
-            className='text-white bg-blue-500 px-[10px] py-[5px] rounded-md'
-            onClick={() => onOpenUpdateModal(record)}
-          >
-            Edit
-          </button>
-          <button
-            className='text-white bg-blue-900 px-[10px] py-[5px] rounded-md'
-            onClick={() => handleDelete(record.id)}
-          >
-            Delete
-          </button>
+          <button className='text-white bg-blue-500 px-[10px] py-[5px] rounded-md' onClick={() => onOpenUpdateModal(record)}>Edit</button>
+          <button className='text-white bg-blue-900 px-[10px] py-[5px] rounded-md' onClick={() => handleDelete(record.id)}>Delete</button>
         </div>
       )
     }
-  ]
+  ];
 
   const onFinish = (values) => {
-    Create(values, {
+    const formData = new FormData();
+    formData.append('productName', values.productName);
+    formData.append('price', values.price);
+    formData.append('rates', values.rates);
+    formData.append('image', values.image[0].originFileObj);
+
+    Create(formData, {
       onSuccess: () => {
-        message.success('Product created successfully')
-        setAddModal(false)
-        form.resetFields()
-        refetch()
+        message.success('Product created successfully');
+        setAddModal(false);
+        form.resetFields();
+        refetch();
       },
       onError: () => {
-        message.error('Failed to create product')
-      },
-    })
-  }
+        message.error('Failed to create product');
+      }
+    });
+  };
 
   const onOpenUpdateModal = (record) => {
     updateForm.setFieldsValue({
       productName: record.productName,
       price: record.price,
       rates: record.rates,
-    })
-    setUpdateId(record.id)
-    setUpdateModal(true)
-  }
+      image: [{
+        uid: record.id,
+        name: 'Image.jpg',
+        status: 'done',
+        url: `http://127.0.0.1:8000/${record.image}`
+      }]
+    });
+    setUpdateId(record.id);
+    setUpdateModal(true);
+  };
 
   const updateFinish = (values) => {
-    const val = { id: updateId, data: values }
+    const formData = new FormData();
+    formData.append("productName", values.productName);
+    formData.append("price", values.price);
+    formData.append("rates", values.rates);
+
+    // Append only if new image selected
+    if (values.image && values.image[0] && values.image[0].originFileObj) {
+      formData.append('image', values.image[0].originFileObj);
+    }
+
+    const val = { id: updateId, data: formData };
 
     Update(val, {
       onSuccess: () => {
-        message.success('Product updated successfully')
-        setUpdateModal(false)
-        refetch()
+        message.success('Product updated successfully');
+        setUpdateModal(false);
+        refetch();
       },
       onError: () => {
-        message.error('Failed to update product')
-      },
-    })
-  }
+        message.error('Failed to update product');
+      }
+    });
+  };
 
   const handleDelete = (id) => {
     Delete(id, {
       onSuccess: () => {
-        message.success('Product deleted successfully')
-        refetch()
+        message.success('Product deleted successfully');
+        refetch();
       },
       onError: () => {
-        message.error('Failed to delete product')
-      },
-    })
-  }
+        message.error('Failed to delete product');
+      }
+    });
+  };
 
   return (
     <div>
@@ -122,60 +148,53 @@ function Product() {
         rowKey="id"
       />
 
-    
-      <Modal
-        open={addModal}
-        onCancel={() => setAddModal(false)}
-        footer={null}
-        title="Create Product">
+      {/* Add Modal */}
+      <Modal open={addModal} onCancel={() => setAddModal(false)} footer={null} title="Create Product">
         <Form layout='vertical' onFinish={onFinish} form={form}>
-
-          <Form.Item name="productName" label="Product Name" rules={[{ required: true, message: 'Please enter product name' }]}>
-            <Input placeholder='Enter product name' />
+          <Form.Item name="productName" label="Product Name" rules={[{ required: true }]}>
+            <Input />
           </Form.Item>
-
-          <Form.Item name="price" label="Price" rules={[{ required: true, message: 'Please enter price' }]}>
-            <Input placeholder='Enter Price' />
+          <Form.Item name="price" label="Price" rules={[{ required: true }]}>
+            <Input />
           </Form.Item>
-
-          <Form.Item name="rates" label="Rates" rules={[{ required: true, message: 'Please enter rates' }]}>
-            <Input placeholder='Enter Rates' />
+          <Form.Item name="rates" label="Rates" rules={[{ required: true }]}>
+            <Input />
           </Form.Item>
-
-          <Form.Item className="m-0">
-            <Button type="primary" className="w-full" htmlType="submit">Submit</Button>
+          <Form.Item name="image" label="Image" valuePropName="fileList" getValueFromEvent={e => Array.isArray(e) ? e : e && e.fileList}>
+            <Upload name="image" listType="picture" beforeUpload={() => false}>
+              <Button icon={<UploadOutlined />}>Click to Upload</Button>
+            </Upload>
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit" className="w-full">Submit</Button>
           </Form.Item>
         </Form>
       </Modal>
 
-    
-      <Modal
-        open={updateModal}
-        onCancel={() => setUpdateModal(false)}
-        footer={null}
-        title="Update Product">
-
+      {/* Update Modal */}
+      <Modal open={updateModal} onCancel={() => setUpdateModal(false)} footer={null} title="Update Product">
         <Form layout='vertical' onFinish={updateFinish} form={updateForm}>
-          
-          <Form.Item name="productName" label="Product Name" rules={[{ required: true, message: 'Please enter product name' }]}>
-            <Input placeholder='Enter product name' />
+          <Form.Item name="productName" label="Product Name" rules={[{ required: true }]}>
+            <Input />
           </Form.Item>
-
-          <Form.Item name="price" label="Price" rules={[{ required: true, message: 'Please enter price' }]}>
-            <Input placeholder='Enter Price' />
+          <Form.Item name="price" label="Price" rules={[{ required: true }]}>
+            <Input />
           </Form.Item>
-
-          <Form.Item name="rates" label="Rates" rules={[{ required: true, message: 'Please enter rates' }]}>
-            <Input placeholder='Enter Rates' />
+          <Form.Item name="rates" label="Rates" rules={[{ required: true }]}>
+            <Input />
           </Form.Item>
-
-          <Form.Item className="m-0">
-            <Button type="primary" className="w-full" htmlType="submit">Submit</Button>
+          <Form.Item name="image" label="Image" valuePropName="fileList" getValueFromEvent={e => Array.isArray(e) ? e : e && e.fileList}>
+            <Upload name="image" listType="picture" beforeUpload={() => false}>
+              <Button icon={<UploadOutlined />}>Click to Upload</Button>
+            </Upload>
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit" className="w-full">Submit</Button>
           </Form.Item>
         </Form>
       </Modal>
     </div>
-  )
+  );
 }
 
-export default Product
+export default Product;

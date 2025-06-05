@@ -5,11 +5,19 @@ export const getProduct = () => {
 }
 
 export const createProduct = (data) => {
-  return apiClient.post('/productApi/', data)
+  return apiClient.post('/productApi/', data, {
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
+  })
 }
 
 export const updateProduct = (data) => {
-  return apiClient.put(`/productApi/${data.id}`, data.data)
+  return apiClient.put(`/productApi/${data.id}`, data.data, {
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
+  })
 }
 
 export const deleteProduct = (id) => {
