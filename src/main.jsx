@@ -11,6 +11,8 @@ import ProductPage from './pages/ProductPage.jsx';
 import UserPage from './pages/UserPage.jsx';
 import CartPage from './pages/CartPage.jsx';
 import BlogPage from './pages/BlogPage.jsx';
+import ContactPage from './pages/ContactPage.jsx';
+import WishlistPage from './pages/WishlistPage.jsx';
 
 
 const router = createBrowserRouter([
@@ -38,6 +40,14 @@ const router = createBrowserRouter([
         path:'blog',
         element:<BlogPage/>
       },
+      {
+        path:'contact',
+        element:<ContactPage/>
+      },
+      {
+        path:'wishlist',
+        element:<WishlistPage/>
+      }
     ],
   },
 ]);

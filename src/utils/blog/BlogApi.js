@@ -14,13 +14,14 @@ export const getBlog = () => {
  }
 
 
- export const updateBlog = (data) => {
-    return apiClient.put(`/blogApi/${data.id}`,data.data,{
-        headers:{
-             "Content-Type":"multipart/formdata"
-        }
-    })
+export const updateBlog = (data) => {
+  return apiClient.put(`/blogApi/${data.id}`, data.data, {
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
+  })
 }
+
 
 
 export const deleteBlog = (id) => {

@@ -42,7 +42,7 @@ function Blog() {
     },
     {
       title: "Action",
-      render: (record) => (
+      render:  (_, record) => (
         <div className="flex items-center space-x-[20px]">
           <button className='text-white bg-blue-500 px-[10px] py-[5px] rounded-md'
             onClick={() => onOpenUpdateModal(record)}>Update</button>
@@ -76,14 +76,15 @@ function Blog() {
 
  
   const onOpenUpdateModal = (record) => {
-    updateForm.setFieldsValue({
-      header: record.header,
-      description: record.description,
-      Paragraphs: record.Paragraphs,
-    });
-    setUpdateId(record.id)
-    setUpdateModal(true)
-  };
+  updateForm.setFieldsValue({
+    header: record.header,
+    description: record.description,
+    Paragraphs: record.Paragraphs,
+  });
+  setUpdateId(record.id);
+  setUpdateModal(true);
+};
+
 
   const updateFinish = (values) => {
     const formData = new FormData()
