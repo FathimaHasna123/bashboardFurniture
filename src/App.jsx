@@ -10,7 +10,6 @@ import { FaUserAlt } from "react-icons/fa";
 import { BsCartFill } from "react-icons/bs";
 import { SiBloglovin } from "react-icons/si";
 import { IoIosContacts } from "react-icons/io";
-import { PiHeartStraightBold } from "react-icons/pi";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -55,9 +54,7 @@ function App() {
     <Link to={'/contact'}>Contact</Link>
     </Menu.Item>
 
-    <Menu.Item key={'7'} icon={<PiHeartStraightBold />}>
-    <Link to={'/wishlist'}>Wishlist</Link>
-    </Menu.Item>
+   
 
   </Menu>
 </Sider>
